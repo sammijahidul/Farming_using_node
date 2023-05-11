@@ -4,6 +4,10 @@ const url = require('url');
 
 const PORT = 5000;
 
+// Reading data from data.json file
+const data = fs.readFileSync(`${__dirname}/data/data.json`, 'utf-8');
+const dataObj = JSON.parse(data);
+
 const server = http.createServer((req, res) => {
 
     // creating routes
@@ -16,7 +20,7 @@ const server = http.createServer((req, res) => {
         res.end('This is product page');
     }
     else if (pathName === '/api') {
-        res.end('This is api page');
+        res.end(data);
     }
     else {
         res.end('Page Not Found')
