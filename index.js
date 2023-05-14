@@ -22,7 +22,7 @@ const server = http.createServer((req, res) => {
         res.end(tempOverview);
     }
     else if (pathName === '/product') {
-        res.end('This is product page');
+        res.end(tempProduct);
     }
     else if (pathName === '/api') {
         res.end(data);
