@@ -19,15 +19,27 @@ const server = http.createServer((req, res) => {
     const pathName = req.url;
 
     if( pathName === '/' || pathName === '/overview') {
+        res.writeHead(200, {
+            'Content-type': 'text/html'
+        });
         res.end(tempOverview);
     }
     else if (pathName === '/product') {
+        res.writeHead(200, {
+            'Content-type': 'text/html'
+        });
         res.end(tempProduct);
     }
     else if (pathName === '/api') {
+        res.writeHead(200, {
+            'Content-type': 'text/html'
+        });
         res.end(data);
     }
     else {
+        res.writeHead(404, {
+            'Content-type': 'text/html'
+        });
         res.end("This page is not found")
     }
 
