@@ -1,5 +1,5 @@
-const http = require('http');
 const fs = require('fs');
+const http = require('http');
 const url = require('url');
 
 const PORT = 5000;
@@ -29,37 +29,43 @@ const dataObj = JSON.parse(data);
 
 const server = http.createServer((req, res) => {
 
-    // creating routes
-    const pathName = req.url;
+    const { query, pathname } = url.parse(req.url, true);
+   
+    // const pathName = req.url;
 
-    if( pathName === '/' || pathName === '/overview') {
+    // Overview route
+    if (pathname === '/' || pathname === '/overview') {
         res.writeHead(200, {
             'Content-type': 'text/html'
         });
-        const cardHtml = dataObj.map(el => replaceTemplate(tempCard, el)).join('');
-        const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardHtml);
+        const cardsHtml = dataObj.map(el => replaceTemplate(tempCard, el)).join('')
+        const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml)
+        res.end(output);
+    } 
+    // Product route
+    else if (pathname === '/product') {
+        res.writeHead(200, {
+            'Content-type': 'text/html'
+        });
+        const product = dataObj[query.id];
+        const output = replaceTemplate(tempProduct, product);
         res.end(output);
     }
-    else if (pathName === '/product') {
-        res.writeHead(200, {
-            'Content-type': 'text/html'
-        });
-        res.end(tempProduct);
-    }
-    else if (pathName === '/api') {
-        res.writeHead(200, {
-            'Content-type': 'text/html'
-        });
-        res.end(data);
-    }
-    else {
+    //  api routes
+    else if (pathname === '/api') {
+        fs.readFile(`${__dirname}/data/data.json`, 'utf-8', (err, data) => {
+                const productData = JSON.parse(data);
+                res.writeHead(200, {'Content-type': 'application/json'});
+                res.end(data);
+            })            
+        }
+       else {
         res.writeHead(404, {
-            'Content-type': 'text/html'
+            'Content-type': 'text/html',
+            'my-own-header': 'hello-world'
         });
-        res.end("This page is not found")
-    }
-
-
+        res.end('<h1> Page not found </h1>');
+       } 
 })
 
 server.listen(PORT, () => {
